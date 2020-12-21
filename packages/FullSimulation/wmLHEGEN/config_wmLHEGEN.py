@@ -95,6 +95,8 @@ for list_l in list_ls:
   os.system("mkdir -p "+datasetname)
 
   os.system("cp skeleton/genfragments/"+genfragment+" Configuration/GenProduction/python/"+datasetname+".py")
+  if "eos" in gridpack:
+    gridpack = "root://eosuser.cern.ch/"+gridpack
   os.system("sed -i 's|###GRIDPACK###|"+gridpack+"|g' Configuration/GenProduction/python/"+datasetname+".py")
 
   os.system("cp skeleton/submit_crab.py "+datasetname+"/")

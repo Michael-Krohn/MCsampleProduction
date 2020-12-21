@@ -1,7 +1,7 @@
-wmLHEGENAPV	10_6_18
-SIMAPV	10_6_17_patch1
-DIGIPremixAPV	10_6_17_patch1
-HLTAPV	8_0_33_UL
-RECOAPV	10_6_17_patch1
-MiniAODAPV	10_6_17_patch1
-NanoAODAPVv2	10_6_19_patch2
+wmLHEGEN	10_6_18
+SIM	10_6_17_patch1
+DIGIPremix	10_6_17_patch1
+HLT	8_0_33_UL
+RECO	10_6_17_patch1
+MiniAOD	10_6_17_patch1
+NanoAODv2	10_6_19_patch2
