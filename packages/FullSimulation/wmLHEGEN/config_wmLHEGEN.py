@@ -108,7 +108,7 @@ for list_l in list_ls:
 
   os.system("mkdir -p "+datasetname)
   cmsdriver_sh = open(datasetname+"/run_cmsdriver.sh","w")
-  cmsdriver_l = "cmsDriver.py Configuration/GenProduction/python/"+datasetname+".py --no_exec --mc --python_filename run_crab.py --fileout "+step+".root  --eventcontent LHE,RAWSIM --datatier LHE,GEN --step LHE,GEN --geometry DB:Extended -n 6284 --customise_commands process.RandomNumberGeneratorService.externalLHEProducer.initialSeed="+str(random.randint(1, 100000))+" "+add_cmsdriver
+  cmsdriver_l = "cmsDriver.py Configuration/GenProduction/python/"+datasetname+".py --no_exec --mc --python_filename run_crab.py --fileout "+step+".root --eventcontent LHE,RAWSIM --datatier LHE,GEN --step LHE,GEN --geometry DB:Extended -n 6284 --customise_commands process.RandomNumberGeneratorService.externalLHEProducer.initialSeed="+str(random.randint(1, 100000))+" "+add_cmsdriver
   cmsdriver_sh.write("#!/bin/bash\n")
   cmsdriver_sh.write(cmsdriver_l+"\n")
   cmsdriver_sh.close()
