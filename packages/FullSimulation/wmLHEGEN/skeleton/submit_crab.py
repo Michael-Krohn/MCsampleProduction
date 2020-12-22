@@ -17,8 +17,8 @@ config.Data.outLFNDirBase = "/store/user/%s/" % (getUsernameFromCRIC())#FIXME
 config.Data.outputDatasetTag = "###OUTPUTDATASETTAG###"
 config.Data.splitting = 'EventBased'
 config.Data.unitsPerJob = ###UNITSPERJOB###
-###NJOBS###
+NJOBS = ###NJOBS###
 config.Data.totalUnits = config.Data.unitsPerJob * NJOBS
 config.Data.publication = True
 
-config.Site.storageSite = 'T2_CH_CERN'
+config.Site.storageSite = 'T3_KR_KNU'

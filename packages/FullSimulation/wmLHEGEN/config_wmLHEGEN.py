@@ -18,15 +18,16 @@ def exit_argumenterr():
         print "[EXIT] e.g.) DYtoMuMu Hadronizer_TuneCP5_13TeV_generic_LHE_pythia8_PSweights_cff.py 10000 4 /PATH/TO/GRIDPACK"
 	sys.exit()
 
-def print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,gridpack):
+def print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname):
+	print "[INFO] Reading list of samples to be submitted : "+inputname
         print "[INFO] Generating configuration files for "+datasetname
-        print "[INFO]      "+nevents+" events splitted into "+nsplitjobs+" jobs"
-        print "[INFO]      Using "+gridpack
-        print "[INFO]      Using "+genfragment
-        check_arguement(datasetname,genfragment,nevents,nsplitjobs,gridpack)
+        print "[INFO] >>     "+nevents+" events splitted into "+nsplitjobs+" jobs"
+        print "[INFO] >>     Using "+gridpack
+        print "[INFO] >>     Using "+genfragment
+        check_argument(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname)
 
-def check_argument(datasetname,genfragment,nevents,nsplitjobs,gridpack):
-	if not os.path.isdir(datasetname):
+def check_argument(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname):
+	if os.path.isdir(inputname+"/"+datasetname):
 	  print "[EXIT] Directory "+datasetname+" already exists"
 	  sys.exit()
 	if not os.path.exists("skeleton/genfragments/"+genfragment):
@@ -55,6 +56,7 @@ parser.add_argument("input_f")
 parser.add_argument("--nowmLHE", action = "store_true")
 parser.add_argument("--dev", action = "store_true")
 input_f = parser.parse_args().input_f
+inputname = input_f.split(".")[0]
 nowmLHE = parser.parse_args().nowmLHE
 dev = parser.parse_args().dev
 
@@ -79,6 +81,14 @@ cmsdriver_campaign_f.close()
 os.system("mkdir -p Configuration/GenProduction/python/")
 submit_list = []
 
+run_cmsdriver_sh = open("run_cmsdriver_"+inputname+".sh","w")
+run_cmsdriver_sh.write("#!/bin/bash\n")
+run_cmsdriver_sh.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
+run_cmsdriver_sh.write("cmsenv\n")
+run_cmsdriver_sh.write("scram b -j 4\n")
+
+submit_crab_sh = open("submit_crab_"+inputname+".sh","w")
+
 for list_l in list_ls:
   list_l = list_l.strip().replace(" ",",").replace("\t",",").split(",")
   if len(list_l) != 5:
@@ -89,44 +99,49 @@ for list_l in list_ls:
   nsplitjobs = list_l[3]
   gridpack = list_l[4]
 
-  print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,gridpack)
+  print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname)
 
   submit_list.append(datasetname)
-  os.system("mkdir -p "+datasetname)
+  crabwd = inputname+"/"+datasetname+"/"
+  os.system("mkdir -p "+crabwd)
 
   os.system("cp skeleton/genfragments/"+genfragment+" Configuration/GenProduction/python/"+datasetname+".py")
   if "eos" in gridpack:
     gridpack = "root://eosuser.cern.ch/"+gridpack
   os.system("sed -i 's|###GRIDPACK###|"+gridpack+"|g' Configuration/GenProduction/python/"+datasetname+".py")
 
-  os.system("cp skeleton/submit_crab.py "+datasetname+"/")
-  os.system("sed -i 's|###REQUESTNAME###|"+datasetname+"|g' "+datasetname+"/submit_crab.py")
-  os.system("sed -i 's|###OUTPUTPRIMARYDATASET###|"+datasetname+"|g' "+datasetname+"/submit_crab.py")
-  os.system("sed -i 's|###OUTPUTDATASETTAG###|"+campaign+"_"+step+"|g' "+datasetname+"/submit_crab.py")
-  os.system("sed -i 's|###UNITSPERJOB###|"+str(int(nevents)/int(nsplitjobs))+"|g' "+datasetname+"/submit_crab.py")
-  os.system("sed -i 's|###NJOBS###|NJOBS="+nsplitjobs+"|g' "+datasetname+"/submit_crab.py")
+  os.system("cp skeleton/submit_crab.py "+crabwd+"/submit_crab.py")
+  os.system("sed -i 's|###REQUESTNAME###|"+datasetname+"|g' "+crabwd+"/submit_crab.py")
+  os.system("sed -i 's|###OUTPUTPRIMARYDATASET###|"+datasetname+"|g' "+crabwd+"/submit_crab.py")
+  os.system("sed -i 's|###OUTPUTDATASETTAG###|"+campaign+"_"+step+"|g' "+crabwd+"/submit_crab.py")
+  os.system("sed -i 's|###UNITSPERJOB###|"+str(int(nevents)/int(nsplitjobs))+"|g' "+crabwd+"/submit_crab.py")
+  os.system("sed -i 's|###NJOBS###|"+nsplitjobs+"|g' "+crabwd+"/submit_crab.py")
 
-  os.system("mkdir -p "+datasetname)
-  cmsdriver_sh = open(datasetname+"/run_cmsdriver.sh","w")
+  cmsdriver_sh = open(crabwd+"/run_cmsdriver.sh","w")
   cmsdriver_l = "cmsDriver.py Configuration/GenProduction/python/"+datasetname+".py --no_exec --mc --python_filename run_crab.py --fileout "+step+".root --eventcontent LHE,RAWSIM --datatier LHE,GEN --step LHE,GEN --geometry DB:Extended -n 6284 --customise_commands process.RandomNumberGeneratorService.externalLHEProducer.initialSeed="+str(random.randint(1, 100000))+" "+add_cmsdriver
   cmsdriver_sh.write("#!/bin/bash\n")
   cmsdriver_sh.write(cmsdriver_l+"\n")
   cmsdriver_sh.close()
 
-run_cmsdriver_sh = open("run_cmsdriver_"+input_f.split(".")[0]+".sh","w")
-run_cmsdriver_sh.write("#!/bin/bash\n")
-run_cmsdriver_sh.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
-run_cmsdriver_sh.write("cmsenv\n")
-run_cmsdriver_sh.write("scram b -j 2\n")
-for i_submit in range(len(submit_list)):
-  run_cmsdriver_sh.write("cd "+cwd+"/"+datasetname+"/\n")
-  run_cmsdriver_sh.write("crab submit -c submit_crab.py\n")
-run_cmsdriver_sh.write("cd "+cwd+"/"+datasetname+"/\n")
+  run_cmsdriver_sh.write("cd "+cwd+"/"+crabwd+"/\n")
+  run_cmsdriver_sh.write("chmod a+x ./run_cmsdriver.sh\n")
+  run_cmsdriver_sh.write("source ./run_cmsdriver.sh\n")
+
+  submit_crab_sh.write("cd "+cwd+"/"+crabwd+"/\n")
+  submit_crab_sh.write("crab submit -c submit_crab.py\n")
+
+run_cmsdriver_sh.write("cd "+cwd+"/\n")
 run_cmsdriver_sh.close()
 
-os.system("source run_cmsdriver_"+input_f.split(".")[0]+".sh")
+submit_crab_sh.write("cd "+cwd+"/\n")
+submit_crab_sh.close()
+
+os.system("source ./run_cmsdriver_"+inputname+".sh")
+os.system("rm ./run_cmsdriver_"+inputname+".sh")
+
 print "[INFO] cmsDriver build for datasets below have completed"
 for i_submit in range(len(submit_list)):
-  print "[INFO]      "+submit_list[i_submit]
+  print "[INFO] >>      "+submit_list[i_submit]
 print "[INFO] Execute the command to submit the jobs to CRAB"
-print "[INFO]      source submit_crab_"+input_f.split(".")[0]+".sh"
+print "[INFO] >>     voms-proxy-init"
+print "[INFO] >>     source submit_crab_"+inputname+".sh"
