@@ -14,11 +14,11 @@ def print_sampleinfo(datasetname,inputdataset,inputname):
 	print "[INFO] Reading list of samples to be submitted : "+inputname
         print "[INFO] Generating configuration files for "+datasetname
         print "[INFO]      Using "+inputdataset
-        check_argument(datasetname)
+        check_argument(datasetname,inputname)
 
-def check_argument(datasetname):
-	if os.path.isdir(datasetname):
-	  print "[EXIT] Directory "+datasetname+" already exists"
+def check_argument(datasetname,inputname):
+	if os.path.isdir(inputname+"/"+datasetname):
+	  print "[EXIT] Directory "+inputname+"/"+datasetname+" already exists"
 	  sys.exit()
 
 parser = argparse.ArgumentParser()

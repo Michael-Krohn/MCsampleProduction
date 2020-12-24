@@ -28,7 +28,7 @@ def print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputna
 
 def check_argument(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname):
 	if os.path.isdir(inputname+"/"+datasetname):
-	  print "[EXIT] Directory "+datasetname+" already exists"
+	  print "[EXIT] Directory "+inputname+"/"+datasetname+" already exists"
 	  sys.exit()
 	if not os.path.exists("skeleton/genfragments/"+genfragment):
 	  print "[EXIT] "+genfragment+" not found in skeleton/genfragments/"
