@@ -1,0 +1,4 @@
+RunIISummer20UL16	--conditions 80X_mcRun2_asymptotic_2016_TrancheIV_v6 --outputCommand "keep *_mix_*_*,keep *_genPUProtons_*_*" --inputCommands "keep *","drop *_*_BMTF_*","drop *PixelFEDChannel*_*_*_*" --step HLT:25ns15e33_v4 --era Run2_2016
+RunIISummer20UL16APV	--conditions 80X_mcRun2_asymptotic_2016_TrancheIV_v6 --outputCommand "keep *_mix_*_*,keep *_genPUProtons_*_*" --inputCommands "keep *","drop *_*_BMTF_*","drop *PixelFEDChannel*_*_*_*" --step HLT:25ns15e33_v4 --era Run2_2016
+RunIISummer20UL17	--conditions 94X_mc2017_realistic_v15 --step HLT:2e34v40 --era Run2_2017
+RunIISummer20UL18	--conditions 102X_upgrade2018_realistic_v15 --step HLT:2018v32 --era Run2_2018 

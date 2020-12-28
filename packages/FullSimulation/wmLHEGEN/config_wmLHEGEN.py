@@ -88,6 +88,9 @@ run_cmsdriver_sh.write("cmsenv\n")
 run_cmsdriver_sh.write("scram b -j 4\n")
 
 submit_crab_sh = open("submit_crab_"+inputname+".sh","w")
+submit_crab_sh.write("#!/bin/bash\n")
+submit_crab_sh.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
+submit_crab_sh.write("cmsenv\n")
 
 for list_l in list_ls:
   list_l = list_l.strip().replace(" ",",").replace("\t",",").split(",")

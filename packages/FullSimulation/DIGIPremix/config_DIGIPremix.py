@@ -22,52 +22,6 @@ def check_argument(datasetname,inputname):
 	  print "[EXIT] Directory "+inputname+"/"+datasetname+" already exists"
 	  sys.exit()
 
-def fetch_PUsample(campaign,miniPU):
-
-  pileup_input = ""
-
-  if miniPU == True:
-    print "[WARNING] Fetching minimal number of Pileup sample files for premixing to boost up the speed for building configuration files"
-    print "[WARNING] Sample production requiring large number of events (> 100,000) should not be using this functionality"
-    if "16" in campaign:
-      NeventsperPUfile = 1600
-      NPUfile = 155723
-    if "17" in campaign:
-      NeventsperPUfile = 9000
-      NPUfile = 27105
-    if "18" in campaign:
-      NeventsperPUfile = 5000
-      NPUfile=49576
-
-    pileup_input_f = open("skeleton/PileupInput_"+campaign+".dat")
-    pileup_input_ls = pileup_input_f.readlines()
-    pileup_input_f.close()
-
-    print "[INFO] 40,000,000 Pileup events will be used for premixing : Fetching "+str(40000000/NeventsperPUfile)+" Pileup sample files"
-    print "[INFO] >>     thisPileupInput_"+campaign+".dat"
-
-    this_pileup_input_f = open("skeleton/thisPileupInput_"+campaign+".dat","a")
-    for i_pileup in range(0,int(40000000/NeventsperPUfile)):
-      pileup_input_l = pileup_input_ls[random.randint(0,NPUfile)].strip()
-      pileup_input = pileup_input+"\""+pileup_input_l+"\","
-    this_pileup_input_f.write(pileup_input)
-    this_pileup_input_f.close()
-
-#    pileup_input = "###PILEUPINPUT###"
-
-  else:
-    print "[INFO] Fetching all the Pileup sample files from DBS, it might take some time to build configuration files"
-    print "[INFO] Sample production not requiring large number of events (< 100,000) is okay to use <--minimisePU> functionality"
-    if "16" in campaign:
-      pileup_input = "dbs:/Neutrino_E-10_gun/RunIISummer20ULPrePremix-UL16_106X_mcRun2_asymptotic_v13-v1/PREMIX"
-    elif "17" in campaign:
-      pileup_input = "dbs:/Neutrino_E-10_gun/RunIISummer20ULPrePremix-UL17_106X_mc2017_realistic_v6-v3/PREMIX"
-    elif "18" in campaign:
-      pileup_input = "dbs:/Neutrino_E-10_gun/RunIISummer20ULPrePremix-UL18_106X_upgrade2018_realistic_v11_L1v1-v2/PREMIX"
-      print "[INFO] >>     "+pileup_input
-
-  return pileup_input
-
 parser = argparse.ArgumentParser()
 parser.add_argument("input_f")
 parser.add_argument("--minimisePU", action = "store_true")
@@ -104,6 +58,17 @@ run_cmsdriver_sh.write("cmsenv\n")
 run_cmsdriver_sh.write("scram b -j 4\n")
 
 submit_crab_sh = open("submit_crab_"+inputname+".sh","w")
+submit_crab_sh.write("#!/bin/bash\n")
+submit_crab_sh.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
+submit_crab_sh.write("cmsenv\n")
+
+if "16" in campaign:
+  pileup_input = "dbs:/Neutrino_E-10_gun/RunIISummer20ULPrePremix-UL16_106X_mcRun2_asymptotic_v13-v1/PREMIX"
+elif "17" in campaign:
+  pileup_input = "dbs:/Neutrino_E-10_gun/RunIISummer20ULPrePremix-UL17_106X_mc2017_realistic_v6-v3/PREMIX"
+elif "18" in campaign:
+  pileup_input = "dbs:/Neutrino_E-10_gun/RunIISummer20ULPrePremix-UL18_106X_upgrade2018_realistic_v11_L1v1-v2/PREMIX"
+  print "[INFO] >>     "+pileup_input
 
 for list_l in list_ls:
   list_l = list_l.strip().replace(" ",",").replace("\t",",").split(",")
@@ -125,7 +90,7 @@ for list_l in list_ls:
 #  os.system("sed -i 's|###UNITSPERJOB###|"+str(int(nevents)/int(nsplitjobs))+"|g' "+datasetname+"/submit_crab.py")
 
   cmsdriver_sh = open(crabwd+"/run_cmsdriver.sh","w")
-  cmsdriver_l = "cmsDriver.py step1 --no_exec --mc --python_filename run_crab.py --fileout "+step+".root --eventcontent PREMIXRAW --datatier GEN-SIM-DIGI --runUnscheduled --step DIGI,DATAMIX,L1,DIGI2RAW --procModifiers premix_stage2 --datamix Premix --geometry DB:Extended -n 6284 --pileup_input "+fetch_PUsample(campaign,miniPU)+" "+add_cmsdriver 
+  cmsdriver_l = "cmsDriver.py step1 --no_exec --mc --python_filename run_crab.py --fileout "+step+".root --eventcontent PREMIXRAW --datatier GEN-SIM-DIGI --runUnscheduled --step DIGI,DATAMIX,L1,DIGI2RAW --procModifiers premix_stage2 --datamix PreMix --geometry DB:Extended -n 6284 --pileup_input "+pileup_input+" "+add_cmsdriver 
   cmsdriver_sh.write("#!/bin/bash\n")
   cmsdriver_sh.write(cmsdriver_l+"\n")
   cmsdriver_sh.close()

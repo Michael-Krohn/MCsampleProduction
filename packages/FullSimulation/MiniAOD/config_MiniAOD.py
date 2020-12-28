@@ -79,7 +79,7 @@ for list_l in list_ls:
 #  os.system("sed -i 's|###UNITSPERJOB###|"+str(int(nevents)/int(nsplitjobs))+"|g' "+datasetname+"/submit_crab.py")
 
   cmsdriver_sh = open(crabwd+"/run_cmsdriver.sh","w")
-  cmsdriver_l = "cmsDriver.py step1 --no_exec --mc --python_filename run_crab.py --fileout "+step+".root --eventcontent RAWSIM --datatier GEN-SIM --runUnscheduled --step SIM --geometry DB:Extended -n 6284 "+add_cmsdriver 
+  cmsdriver_l = "cmsDriver.py step1 --no_exec --mc --python_filename run_crab.py --fileout "+step+".root --eventcontent MINIAODSIM --runUnscheduled --datatier MINIAODSIM --geometry DB:Extended --step PAT -n 6284 "+add_cmsdriver 
   cmsdriver_sh.write("#!/bin/bash\n")
   cmsdriver_sh.write(cmsdriver_l+"\n")
   cmsdriver_sh.close()

@@ -1,0 +1,4 @@
+RunIISummer20UL16	--conditions 106X_mcRun2_asymptotic_v15 --era Run2_2016,run2_nanoAOD_106Xv1
+RunIISummer20UL16APV	--conditions 106X_mcRun2_asymptotic_preVFP_v9 --era Run2_2016_HIPM,run2_nanoAOD_106Xv1
+RunIISummer20UL17	--conditions 106X_mc2017_realistic_v8 --era Run2_2017,run2_nanoAOD_106Xv1
+RunIISummer20UL18	--conditions 106X_upgrade2018_realistic_v15_L1v1 --era Run2_2018,run2_nanoAOD_106Xv1
