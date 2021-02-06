@@ -3,23 +3,23 @@ import sys
 import argparse
 
 def exit_argumenterr():
-	print "[EXIT] Input arguments are not correctly given"
-	print "[EXIT] <inputfile.dat> should contain : DATASETNAME OUTPUTDATASET"
-	print "[EXIT] DATASETNAME : Name of the dataset that will be used for DAS publication"
+        print "[EXIT] Input arguments are not correctly given"
+        print "[EXIT] <inputfile.dat> should contain : DATASETNAME OUTPUTDATASET"
+        print "[EXIT] DATASETNAME : Name of the dataset that will be used for DAS publication"
         print "[EXIT] OUTPUTDATASET : DAS published dataset"
         print "[EXIT] e.g.) TTbarTypeIHeavyN-Mu_4L_LO_MN60 /TTbarTypeIHeavyN-Mu_4L_LO_MN60/jihunk-DRPremix_step1__CMSSW_10_2_5-96e2d90999375d8c542ea905b43803e1/USER"
-	sys.exit()
+        sys.exit()
 
 def print_sampleinfo(datasetname,inputdataset,inputname):
-	print "[INFO] Reading list of samples to be submitted : "+inputname
+        print "[INFO] Reading list of samples to be submitted : "+inputname
         print "[INFO] Generating configuration files for "+datasetname
         print "[INFO]      Using "+inputdataset
         check_argument(datasetname,inputname)
 
 def check_argument(datasetname,inputname):
-	if os.path.isdir(inputname+"/"+datasetname):
-	  print "[EXIT] Directory "+inputname+"/"+datasetname+" already exists"
-	  sys.exit()
+        if os.path.isdir(inputname+"/"+datasetname):
+          print "[EXIT] Directory "+inputname+"/"+datasetname+" already exists"
+          sys.exit()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input_f")

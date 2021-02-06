@@ -4,63 +4,54 @@ import random
 import argparse
 
 def exit_argumenterr():
-	print "[EXIT] Input arguments are not correctly given"
-	print "[EXIT] <inputfile.dat> should contain : DATASETNAME GENFRAGMENT NEVENTS NSPLITJOBS GRIDPACK"
-	print "[EXIT] DATASETNAME : Name of the dataset that will be used for DAS publication"
-	print "[EXIT] GENFRAGMENT : Generator fragment python files that will be used for hadronizer or generator"
-	print "[EXIT]               Should be stored in skeleton/genfragments directory"
-	print "[EXIT] NEVENTS : Number of events in total that will be made"
-	print "[EXIT]           Jet matching or filter efficiencies should be taken into account"
-	print "[EXIT]           e.g.) efficiency is 40% => NEVENTS=10000 will give 4000 event after GEN step"
+        print "[EXIT] Input arguments are not correctly given"
+        print "[EXIT] <inputfile.dat> should contain : DATASETNAME GENFRAGMENT NEVENTS NSPLITJOBS GRIDPACK"
+        print "[EXIT] DATASETNAME : Name of the dataset that will be used for DAS publication"
+        print "[EXIT] GENFRAGMENT : Generator fragment python files that will be used for hadronizer or generator"
+        print "[EXIT]               Should be stored in skeleton/genfragments directory"
+        print "[EXIT] NEVENTS : Number of events in total that will be made"
+        print "[EXIT]           Jet matching or filter efficiencies should be taken into account"
+        print "[EXIT]           e.g.) efficiency is 40% => NEVENTS=10000 will give 4000 event after GEN step"
         print "[EXIT] NSPLITJOBS : Number of jobs that will be splitted into CRAB"
-	print "[EXIT]              NEVENTS=10000 and NSPLITJOBS=4 => 2500 events per CRAB job"
+        print "[EXIT]              NEVENTS=10000 and NSPLITJOBS=4 => 2500 events per CRAB job"
         print "[EXIT] GRIDPACK : Path to gridpack"
         print "[EXIT] e.g.) DYtoMuMu Hadronizer_TuneCP5_13TeV_generic_LHE_pythia8_PSweights_cff.py 10000 4 /PATH/TO/GRIDPACK"
-	sys.exit()
+        sys.exit()
 
 def print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname):
-	print "[INFO] Reading list of samples to be submitted : "+inputname
+        print "[INFO] Reading list of samples to be submitted : "+inputname
         print "[INFO] Generating configuration files for "+datasetname
         print "[INFO] >>     "+nevents+" events splitted into "+nsplitjobs+" jobs"
-	if (int(nevents)/int(nsplitjobs)) > 2500:
+        if (int(nevents)/int(nsplitjobs)) > 2500:
           print "[WARNING] >>     Number of events per CRAB job "+str(int(nevents)/int(nsplitjobs))+" larger than 2500"  
         print "[INFO] >>     Using "+gridpack
         print "[INFO] >>     Using "+genfragment
         check_argument(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname)
 
 def check_argument(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname):
-	if os.path.isdir(inputname+"/"+datasetname):
-	  print "[EXIT] Directory "+inputname+"/"+datasetname+" already exists"
-	  sys.exit()
-	if not os.path.exists("skeleton/genfragments/"+genfragment):
-	  print "[EXIT] "+genfragment+" not found in skeleton/genfragments/"
-	  sys.exit()
-	if not (int(nevents)/int(nsplitjobs) == float(nevents)/int(nsplitjobs)):
-	  print "[EXIT] NEVENTS/NSPLITJOBS is not an integer"
-	  sys.exit()
-	if not gridpack == "fragment":
-	  if "cvmfs" in gridpack:
-	    if not os.path.exists(gridpack):
-	      print "[EXIT] "+gridpack+" not found"
-	      sys.exit()
-	  elif "eos" in gridpack:
-	    if "lxplus" in os.getenv("HOSTNAME"):
-	      if not os.path.exists(gridpack):
-	        print "[EXIT] "+gridpack+" not found"
-	        sys.exit()
-	    else:
-	      print "[WARNING] "+gridpack+" should be in lxplus.cern.ch" ###FIXME should upload generic tarball runner somewhere
-	  else:
-	    print "[EXIT] GRIDPACK should be in either CVMFS or EOS area in lxplus"
-	    sys.exit()
+        if os.path.isdir(inputname+"/"+datasetname):
+          print "[EXIT] Directory "+inputname+"/"+datasetname+" already exists"
+          sys.exit()
+        if not os.path.exists("skeleton/genfragments/"+genfragment):
+          print "[EXIT] "+genfragment+" not found in skeleton/genfragments/"
+          sys.exit()
+        if not (int(nevents)/int(nsplitjobs) == float(nevents)/int(nsplitjobs)):
+          print "[EXIT] NEVENTS/NSPLITJOBS is not an integer"
+          sys.exit()
+        if "cvmfs" in gridpack:
+          if not os.path.exists(gridpack):
+            print "[EXIT] "+gridpack+" not found"
+            sys.exit()
+        else:
+#FIXME or EOS area in lxplus : run_generic_tarball_xrootd.sh is not yet backported so this doesn't work"
+          print "[EXIT] GRIDPACK should be in either CVMFS"
+          sys.exit()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input_f")
-parser.add_argument("--nowmLHE", action = "store_true")
 parser.add_argument("--dev", action = "store_true")
 input_f = parser.parse_args().input_f
 inputname = input_f.split(".")[0]
-nowmLHE = parser.parse_args().nowmLHE
 dev = parser.parse_args().dev
 
 cwd = os.getcwd()
@@ -103,14 +94,7 @@ for list_l in list_ls:
   genfragment = list_l[1].replace("skeleton/","").replace("genfragments/","")
   nevents = list_l[2]
   nsplitjobs = list_l[3]
-  try:
-    gridpack = list_l[4]
-  except:
-    if nowmLHE:
-      gridpack = "fragment"
-    else:
-      print "[EXIT] For generator fragment based sample production <--nowmLHE> option should be used"
-      sys.exit()
+  gridpack = list_l[4]
   print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,gridpack,inputname)
 
   submit_list.append(datasetname)
@@ -118,8 +102,6 @@ for list_l in list_ls:
   os.system("mkdir -p "+crabwd)
 
   os.system("cp skeleton/genfragments/"+genfragment+" Configuration/GenProduction/python/"+datasetname+".py")
-  if "eos" in gridpack:
-    gridpack = "root://eosuser.cern.ch/"+gridpack
   os.system("sed -i 's|###GRIDPACK###|"+gridpack+"|g' Configuration/GenProduction/python/"+datasetname+".py")
 
   os.system("cp skeleton/submit_crab.py "+crabwd+"/submit_crab.py")

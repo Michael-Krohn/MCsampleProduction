@@ -21,5 +21,5 @@ config.Data.unitsPerJob = 1
 config.Data.publication = True
 config.Data.ignoreLocality = True
 
-config.Site.storageSite = "T2_CH_CERN"
+config.Site.storageSite = "###CONFIG_STORAGESITE###"
 config.Site.whitelist = ["T2_*","T3_*"]
