@@ -47,7 +47,7 @@ for i_method in range(0,len(methods)):
 
 setup_sh.write("cd "+cwd+"\n")
 setup_sh.write("sed -i 's|###CONFIG_STORAGESITE###|{}|g' ./*Simulation/RunIISummer20UL*/*/src/skeleton/submit_crab.py".format(config_storagesite))
-setup_sh.close()	
+setup_sh.close()
 os.system("chmod 755 setup.sh")
 os.system("source ./setup.sh")
 print "Fetching complete."
@@ -55,7 +55,7 @@ print "Steps : (wmLHE)GEN >> SIM >> DIGIPremix >> HLT >> RECO >> MiniAOD >> Nano
 print "For more details check out :"
 print "    EXO-MC&I : https://exo-mc-and-i.gitbook.io/exo-mc-and-interpretation/"
 print "    PdmV : https://cms-pdmv.gitbook.io/project/"
-print "Make sure you check your writing permissions by executing the command :"
+print "Make sure you have the writing permissions by executing the command :"
 print "    source /cvmfs/cms.cern.ch/crab3/crab.sh"
 print "    source /cvmfs/cms.cern.ch/cmsset_default.sh"
 print "    cmsrel CMSSW_X_Y_Z"
