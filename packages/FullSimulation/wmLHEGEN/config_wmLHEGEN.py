@@ -101,7 +101,19 @@ for list_l in list_ls:
   crabwd = inputname+"/"+datasetname+"/"
   os.system("mkdir -p "+crabwd)
 
+  genfragment_f = open("skeleton/genfragments/"+genfragment)
+  genfragment_ls = genfragment_f.readlines()
+  genfragment_f.close()
+
+  extLHEinFrag = False
+  for genfragment_l in genfragment_ls:
+    if "externalLHEProducer" in genfragment_l:
+      extLHEinFrag = True
+  if not extLHEinFrag:
+    os.system("cat skeleton/genfragments/externalLHEProducer.py >> skeleton/genfragments/"+genfragment)
+
   os.system("cp skeleton/genfragments/"+genfragment+" Configuration/GenProduction/python/"+datasetname+".py")
+
   os.system("sed -i 's|###GRIDPACK###|"+gridpack+"|g' Configuration/GenProduction/python/"+datasetname+".py")
 
   os.system("cp skeleton/submit_crab.py "+crabwd+"/submit_crab.py")

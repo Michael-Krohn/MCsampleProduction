@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Generator.Pythia8CommonSettings_cfi import *
-from Configuration.Generator.MCTunes2017.PythiaCP2Settings_cfi import *
+from Configuration.Generator.MCTunes2017.PythiaCP3Settings_cfi import *
 from Configuration.Generator.PSweightsPythia.PythiaPSweightsSettings_cfi import *
 
 generator = cms.EDFilter("Pythia8HadronizerFilter",
@@ -12,10 +12,10 @@ generator = cms.EDFilter("Pythia8HadronizerFilter",
     comEnergy = cms.double(13000.),
     PythiaParameters = cms.PSet(
         pythia8CommonSettingsBlock,
-        pythia8CP2SettingsBlock,
+        pythia8CP3SettingsBlock,
         pythia8PSweightsSettingsBlock,
         parameterSets = cms.vstring('pythia8CommonSettings',
-                                    'pythia8CP2Settings',
+                                    'pythia8CP3Settings',
                                     'pythia8PSweightsSettings'
                                     )
     )
