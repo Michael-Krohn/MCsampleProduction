@@ -14,15 +14,20 @@ def exit_argumenterr():
         print "[EXIT]           e.g.) efficiency is 40% => NEVENTS=10000 will give 4000 event after GEN step"
         print "[EXIT] NSPLITJOBS : Number of jobs that will be splitted into CRAB"
         print "[EXIT]              NEVENTS=10000 and NSPLITJOBS=4 => 2500 events per CRAB job"
+        print "[OPTIONAL] INPUTLHE : Path to LHE file created externally from gridpacks that will be used as an input"
+        print "[OPTIONAL]            To use this functionality, --inputLHE should be turned on"
+        print "[OPTIONAL]            e.g.) root://cluster142.knu.ac.kr//store/user/shjeon/LHEfiles/DMSimp_monojet_NLO_Axial_GQ0p25_GDM1p0_MY1-1000p0_MXd-1p0.lhe"
         sys.exit()
 
-def print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,inputname):
+def print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,inputname,lhefile):
         print "[INFO] Reading list of samples to be submitted : "+inputname
         print "[INFO] Generating configuration files for "+datasetname
         print "[INFO] >>     "+nevents+" events splitted into "+nsplitjobs+" jobs"
         if (int(nevents)/int(nsplitjobs)) > 2500:
           print "[WARNING] >>     Number of events per CRAB job "+str(int(nevents)/int(nsplitjobs))+" larger than 2500"  
         print "[INFO] >>     Using "+genfragment
+        if not lhefile == "":
+          print "[INFO] >>     Using "+lhefile
         check_argument(datasetname,genfragment,nevents,nsplitjobs,inputname)
 
 def check_argument(datasetname,genfragment,nevents,nsplitjobs,inputname):
@@ -39,9 +44,11 @@ def check_argument(datasetname,genfragment,nevents,nsplitjobs,inputname):
 parser = argparse.ArgumentParser()
 parser.add_argument("input_f")
 parser.add_argument("--dev", action = "store_true")
+parser.add_argument("--inputLHE", action = "store_true")
 input_f = parser.parse_args().input_f
 inputname = input_f.split(".")[0]
 dev = parser.parse_args().dev
+inputLHE = parser.parse_args().inputLHE
 
 cwd = os.getcwd()
 datasettag = cwd.split("/")[-2]
@@ -77,13 +84,20 @@ submit_crab_sh.write("cmsenv\n")
 
 for list_l in list_ls:
   list_l = list_l.strip().replace(" ",",").replace("\t",",").split(",")
-  if len(list_l) != 4:
-    exit_argumenterr()
+  lhefile = ""
+  if inputLHE:
+    if len(list_l) != 5:
+      exit_argumenterr()
+    lhefile = list_l[4]
+  else:
+    if len(list_l) != 4:
+      exit_argumenterr()
   datasetname = list_l[0]
   genfragment = list_l[1].replace("skeleton/","").replace("genfragments/","")
   nevents = list_l[2]
   nsplitjobs = list_l[3]
-  print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,inputname)
+
+  print_sampleinfo(datasetname,genfragment,nevents,nsplitjobs,inputname,lhefile)
 
   submit_list.append(datasetname)
   crabwd = inputname+"/"+datasetname+"/"
@@ -100,6 +114,8 @@ for list_l in list_ls:
 
   cmsdriver_sh = open(crabwd+"/run_cmsdriver.sh","w")
   cmsdriver_l = "cmsDriver.py Configuration/GenProduction/python/"+datasetname+".py --no_exec --mc --python_filename run_crab.py --fileout "+step+".root --eventcontent RAWSIM --datatier GEN --step GEN --geometry DB:Extended -n 6284 "+add_cmsdriver
+  if inputLHE:
+    cmsdriver_l = cmsdriver_l+" --filein "+lhefile
   cmsdriver_sh.write("#!/bin/bash\n")
   cmsdriver_sh.write(cmsdriver_l+"\n")
   cmsdriver_sh.close()
