@@ -9,8 +9,8 @@ config.General.transferOutputs = True
 
 config.JobType.pluginName = "Analysis"
 config.JobType.psetName = "run_crab.py"
-#config.JobType.maxMemoryMB = 4000
-#config.JobType.numCores = 8
+config.JobType.maxMemoryMB = 4000
+config.JobType.numCores = 4
 
 config.Data.inputDataset = "###INPUTDATASET###" 
 config.Data.outLFNDirBase = "/store/user/%s/" % (getUsernameFromCRIC())
