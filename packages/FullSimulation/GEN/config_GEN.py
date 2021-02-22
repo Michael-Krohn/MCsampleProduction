@@ -108,7 +108,7 @@ for list_l in list_ls:
   os.system("cp skeleton/submit_crab.py "+crabwd+"/submit_crab.py")
   os.system("sed -i 's|###REQUESTNAME###|"+datasetname+"|g' "+crabwd+"/submit_crab.py")
   os.system("sed -i 's|###OUTPUTPRIMARYDATASET###|"+datasetname+"|g' "+crabwd+"/submit_crab.py")
-  os.system("sed -i 's|###OUTPUTDATASETTAG###|"+campaign+"_"+step+"|g' "+crabwd+"/submit_crab.py")
+  os.system("sed -i 's|###INPUTDATASETTAG###|"+campaign+"_"+step+"|g' "+crabwd+"/submit_crab.py")
   os.system("sed -i 's|###UNITSPERJOB###|"+str(int(nevents)/int(nsplitjobs))+"|g' "+crabwd+"/submit_crab.py")
   os.system("sed -i 's|###NJOBS###|"+nsplitjobs+"|g' "+crabwd+"/submit_crab.py")
 

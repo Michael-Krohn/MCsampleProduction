@@ -9,12 +9,12 @@ config.General.transferOutputs = True
 
 config.JobType.pluginName = "Analysis"
 config.JobType.psetName = "run_crab.py"
-#config.JobType.maxMemoryMB = 4000
+config.JobType.maxMemoryMB = 4000
 #config.JobType.numCores = 8
 
 config.Data.inputDataset = "###INPUTDATASET###" 
 config.Data.outLFNDirBase = "/store/user/%s/" % (getUsernameFromCRIC())
-config.Data.outputDatasetTag = "###OUTPUTDATASETTAG###"
+config.Data.outputDatasetTag = "###INPUTDATASETTAG###"
 config.Data.inputDBS = "phys03"
 config.Data.splitting = "FileBased"
 config.Data.unitsPerJob = 1
