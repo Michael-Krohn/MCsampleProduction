@@ -1,6 +1,8 @@
 import os
 import sys
 import argparse
+sys.path.append("../../../../packages/setups/Full/")
+import checkDASInput
 
 def exit_argumenterr():
         print "[EXIT] Input arguments are not correctly given"
@@ -65,7 +67,8 @@ for list_l in list_ls:
     exit_argumenterr()
   datasetname = list_l[0]
   inputdataset = list_l[1]
-
+  if checkDASInput.checkDASInput(inputdataset,step,campaign):
+    sys.exit()
   print_sampleinfo(datasetname,inputdataset,inputname)
 
   submit_list.append(datasetname)
