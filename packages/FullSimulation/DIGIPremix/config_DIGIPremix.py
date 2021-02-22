@@ -5,9 +5,9 @@ import argparse
 
 def exit_argumenterr():
         print "[EXIT] Input arguments are not correctly given"
-        print "[EXIT] <inputfile.dat> should contain : DATASETNAME OUTPUTDATASET"
+        print "[EXIT] <inputfile.dat> should contain : DATASETNAME INPUTDATASET"
         print "[EXIT] DATASETNAME : Name of the dataset that will be used for DAS publication"
-        print "[EXIT] OUTPUTDATASET : DAS published dataset"
+        print "[EXIT] INPUTDATASET : DAS published dataset"
         print "[EXIT] e.g.) TTbarTypeIHeavyN-Mu_4L_LO_MN60 /TTbarTypeIHeavyN-Mu_4L_LO_MN60/jihunk-DRPremix_step1__CMSSW_10_2_5-96e2d90999375d8c542ea905b43803e1/USER"
         sys.exit()
 
@@ -86,7 +86,7 @@ for list_l in list_ls:
   os.system("cp skeleton/submit_crab.py "+crabwd+"/submit_crab.py")
   os.system("sed -i 's|###REQUESTNAME###|"+datasetname+"|g' "+crabwd+"/submit_crab.py")
   os.system("sed -i 's|###INPUTDATASET###|"+inputdataset+"|g' "+crabwd+"/submit_crab.py")
-  os.system("sed -i 's|###OUTPUTDATASETTAG###|"+campaign+"_"+step+"|g' "+crabwd+"/submit_crab.py")
+  os.system("sed -i 's|###INPUTDATASETTAG###|"+campaign+"_"+step+"|g' "+crabwd+"/submit_crab.py")
 #  os.system("sed -i 's|###UNITSPERJOB###|"+str(int(nevents)/int(nsplitjobs))+"|g' "+datasetname+"/submit_crab.py")
 
   cmsdriver_sh = open(crabwd+"/run_cmsdriver.sh","w")

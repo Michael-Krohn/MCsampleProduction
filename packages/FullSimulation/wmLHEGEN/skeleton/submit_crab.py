@@ -14,7 +14,7 @@ config.JobType.psetName = "run_crab.py"
 
 config.Data.outputPrimaryDataset = "###OUTPUTPRIMARYDATASET###"
 config.Data.outLFNDirBase = "/store/user/%s/" % (getUsernameFromCRIC())#FIXME
-config.Data.outputDatasetTag = "###OUTPUTDATASETTAG###"
+config.Data.outputDatasetTag = "###INPUTDATASETTAG###"
 config.Data.splitting = 'EventBased'
 config.Data.unitsPerJob = ###UNITSPERJOB###
 NJOBS = ###NJOBS###
