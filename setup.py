@@ -10,8 +10,7 @@ cwd = os.getcwd()
 
 cmssws = ["slc7_amd64_gcc700", "slc7_amd64_gcc700", "slc7_amd64_gcc700", "slc7_amd64_gcc700"]
 cmssws_HLT = ["slc7_amd64_gcc530", "slc7_amd64_gcc530", "slc7_amd64_gcc630", "slc7_amd64_gcc700"]
-#methods = ["Full"]#, "Fast"]
-methods = ["Fast"]
+methods = ["Full", "Fast"]
 
 print "Setting up Fast and Full simulation sample production workflows."
 config_storagesite = raw_input("What is your T2/T3 storage site [T2_CH_CERN,T3_KR_KNU,T2_US_FNAL,..]? ")
@@ -29,14 +28,12 @@ for i_method in range(0,len(methods)):
 
   for i_campaign in range(0,len(campaigns)):
     campaign = campaigns[i_campaign]
-#    print "Fetching CMSSW releases for Ultra Legacy "+method+" "+campaign+"..."
     setup_f = open(cwd+"/packages/setups/"+method+"/setup_"+campaign+".dat")
     setup_ls = setup_f.readlines()
     setup_f.close()
 
     for i_setup in range(0,len(setup_ls)):
       setup_l =  setup_ls[i_setup].strip()
-#      print "\t"+setup_l
       step = setup_l.split("\t")[0]
       cmssw = setup_l.split("\t")[1]
       setup_sh.write("mkdir -p "+cwd+"/"+method+"Simulation/"+campaign+"/\n")
