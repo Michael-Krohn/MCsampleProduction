@@ -13,7 +13,6 @@ cmssws_HLT = ["slc7_amd64_gcc530", "slc7_amd64_gcc530", "slc7_amd64_gcc630", "sl
 methods = ["Full", "Fast"]
 
 print "Setting up Fast and Full simulation sample production workflows."
-config_storagesite = raw_input("What is your T2/T3 storage site [T2_CH_CERN,T3_KR_KNU,T2_US_FNAL,..]? ")
 
 setup_sh = open("setup.sh", "w")
 setup_sh.write("source /cvmfs/cms.cern.ch/cmsset_default.sh\n")
@@ -47,7 +46,6 @@ for i_method in range(0,len(methods)):
       setup_sh.write("cp -r "+cwd+"/packages/"+method+"Simulation/"+step+"/* .\n")
 
 setup_sh.write("cd "+cwd+"\n")
-setup_sh.write("sed -i 's|###CONFIG_STORAGESITE###|{}|g' ./*Simulation/*/*/src/skeleton/submit_crab.py".format(config_storagesite))
 setup_sh.close()
 os.system("chmod 755 setup.sh")
 os.system("source ./setup.sh")
@@ -56,11 +54,4 @@ print "Steps : (wmLHE)GEN >> SIM >> DIGIPremix >> HLT >> RECO >> MiniAOD >> Nano
 print "For more details check out :"
 print "    EXO-MC&I : https://exo-mc-and-i.gitbook.io/exo-mc-and-interpretation/"
 print "    PdmV : https://cms-pdmv.gitbook.io/project/"
-print "Make sure you have the writing permissions by executing the command :"
-print "    source /cvmfs/cms.cern.ch/crab3/crab.sh"
-print "    source /cvmfs/cms.cern.ch/cmsset_default.sh"
-print "    cmsrel CMSSW_X_Y_Z"
-print "    cd CMSSW_X_Y_Z/src/"
-print "    cmsenv"
-print "    crab checkwrite --site={}".format(config_storagesite)
 os.system("rm setup.sh")
