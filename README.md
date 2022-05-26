@@ -25,7 +25,9 @@ Then run:
 python config_GEN_condor.py DYJets_m200_GEN_test.csv --inputLHE
 ```
 
-The script will print out more instructions. Follow these.
+The script will print out more instructions. Follow these to submit your GEN production jobs to condor.
+
+Once the condor jobs have finished, move all output root files to your /hdfs/cms/user/ space. 
 
 ### Additional details
 
