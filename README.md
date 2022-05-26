@@ -29,6 +29,8 @@ The script will print out more instructions. Follow these to submit your GEN pro
 
 Once the condor jobs have finished, move all output root files to your /hdfs/cms/user/ space. 
 
+Then follow the instructions here to analyze the GEN files: https://github.com/Michael-Krohn/GENstudy/tree/master/DYJetsAnalyzer
+
 ### Additional details
 
 For more details check out :
