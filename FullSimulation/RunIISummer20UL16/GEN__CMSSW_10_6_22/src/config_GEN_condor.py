@@ -119,6 +119,7 @@ for list_l in list_ls:
   run_cmsdriver_sh.write("source ./run_cmsdriver.sh\n")
 
   os.system("ls "+lhefile+" > LHEfileLocation.txt")
+  os.system("sed -i 's;/hdfs;file:/hdfs;' LHEfileLocation.txt")
   os.system("mv LHEfileLocation.txt "+condorwd)
 
   submit_condor_sh.write("cd "+cwd+"/"+condorwd+"/\n")
