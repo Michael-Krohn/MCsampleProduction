@@ -109,7 +109,7 @@ for list_l in list_ls:
   cmsdriver_sh = open(condorwd+"/run_cmsdriver.sh","w")
   cmsdriver_l = "cmsDriver.py Configuration/GenProduction/python/"+datasetname+".py --no_exec --mc --python_filename run_condor.py --fileout "+step+".root --eventcontent RAWSIM --datatier GEN --step GEN --geometry DB:Extended -n "+str(int(nevents)/int(nsplitjobs))+" "+add_cmsdriver
   if inputLHE:
-    cmsdriver_l = cmsdriver_l+" --filein "+lhefile
+    cmsdriver_l = cmsdriver_l+" --filein file:"+lhefile
   cmsdriver_sh.write("#!/bin/bash\n")
   cmsdriver_sh.write(cmsdriver_l+"\n")
   cmsdriver_sh.close()
