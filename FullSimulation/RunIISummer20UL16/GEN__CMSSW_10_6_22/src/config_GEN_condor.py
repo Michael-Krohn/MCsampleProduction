@@ -143,5 +143,8 @@ print "[INFO] >>     cmsenv"
 print "[INFO] >>     scram b"
 print "[INFO] Open "+cwd+"/"+condorwd+"/run_cmsdriver.sh"
 print "[INFO] Copy the command within at run it"
+print "[INFO] Open run_condor.py and modify the input source module by adding the skipEvents argument. An Ex:"
+print "[INFO] fileNames = cms.untracked.vstring('file:/hdfs/cms/user/krohn045/WR_DY_GEN/DYJets_m200/LHE/cmsgrid_final.lhe'),"
+print "[INFO] skipEvents = cms.untracked.uint32(0),"
 print "[INFO] >>     mv run_condor.py "+condorwd
 print "[INFO] >>     source submit_condor_"+inputname+".sh"
